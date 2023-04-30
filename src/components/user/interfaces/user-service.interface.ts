@@ -6,8 +6,8 @@ export interface IUserService {
     createUserService(userParams: IStoreUserDTO): Promise<IResponseJson>;
     findByIdUserService(id: number): Promise<IResponseJson>;
     deleteUserService(id: number): Promise<IResponseJson>;
-    findAllUserService(): Promise<IResponseJson>
     updateUserService(userParams: IUpdateUserDTO): Promise<IResponseJson>;
     findByEmailUserService(email: string): Promise<IResponseJson>;
     findExistingEmailUserService(email: string): Promise<IResponseJson>;
+    compareParamIdAndHeaderID(headerID: number, userID: number): boolean
 }

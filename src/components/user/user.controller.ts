@@ -49,104 +49,77 @@ export class UserController extends UserService implements IUserController {
     public async deleteUser(req: Request, res: Response): Promise<void> {
         try {
             const id: number = Number(req.params.id);
-            
-            if(id) {
-                const idExists: IResponseJson = await super.findByIdUserService(id);
-    
-                if(idExists.status && idExists.data) {
-                    const result: IResponseJson = await super.deleteUserService(id);
-            
-                    if(result.status) {
-                        res.status(200);
-                        res.send("'User deleted successfully!");
+            const userID: number = Number(req.headers['user-id']);
+            const permission = super.compareParamIdAndHeaderID(userID, id);
+
+            if(permission) {
+                if(id) {
+                    const idExists: IResponseJson = await super.findByIdUserService(id);
+        
+                    if(idExists.status && idExists.data) {
+                        const result: IResponseJson = await super.deleteUserService(id);
+                
+                        if(result.status) {
+                            res.status(200);
+                            res.send("'User deleted successfully!");
+                        } else {
+                            res.status(400);
+                            res.json(result?.message);
+                        }
+                    } else if(idExists.status && !idExists.data) {
+                        res.status(404);
+                        res.send("User not found!")
+                        throw Error("User not found!") 
                     } else {
-                        res.status(400);
-                        res.json(result?.message);
+                        res.status(400)
+                        res.send(idExists?.message);
                     }
-                } else if(idExists.status && !idExists.data) {
-                    res.status(404);
-                    res.send("User not found!")
-                    throw Error("User not found!") 
-                } else {
-                    res.status(400)
-                    res.send(idExists?.message);
                 }
-            }
-        } catch(error: any) {
-            console.error(error);
-        }
-    }
-
-    public async findUser(req: Request, res: Response): Promise<void> {
-        try {
-            const id: number = Number(req.params.id);
-
-            if(id) {
-                const result: IResponseJson = await super.findByIdUserService(id);
-
-                if(result.status && result.data) {
-                    res.status(200);
-                    res.json({status: 200, data: result.data});
-                } else if(result.status && !result.data) {
-                    res.status(404);
-                    res.json("User not found!");
-                    throw Error("User not found!") 
-                } else {
-                    res.status(400);
-                    res.json(result?.message);
-                }
-            }
-        } catch(error: any) {
-            console.error(error);
-        }
-    }
-
-    public async findAllUsers(req: Request, res: Response): Promise<void> {
-        try {
-            const result: IResponseJson = await super.findAllUserService();
-
-            if(result.status && result.data.length > 0) {
-                res.status(200);
-                res.json({status: 200, data: result.data});
-            } else if(result.status && result.data.length === 0) {
-                res.status(404);
-                res.json("Users not found!");
-                throw Error("Users not found!") 
             } else {
-                res.status(400);
-                res.json(result?.message);
-            }    
-        } catch (error: any) {
+                res.status(401);
+                res.json("Not authorized!");
+                throw Error("Not authorized!");
+            }
+        } catch(error: any) {
             console.error(error);
         }
     }
 
     public async updateUser(req: Request, res: Response): Promise<void> {
         try {
-            const user: IUpdateUserDTO = req.body;
+            const id: number = Number(req.params.id);
+            const userID: number = Number(req.headers['user-id']);
+            const user: IUpdateUserDTO = {...req.body, id};
+            const permission = super.compareParamIdAndHeaderID(userID, id);
 
-            if(user) {
-                const idExists: IResponseJson = await super.findByIdUserService(user.id);
-    
-                if(idExists.status && idExists.data) {
-                   
-                    const result: IResponseJson = await super.updateUserService(user);
+            if(permission) {
+                if(user) {
+                    const idExists: IResponseJson = await super.findByIdUserService(user.id);
         
-                    if(result.status) {
-                        res.status(200);
-                        res.json({success:1});
+                    if(idExists.status && idExists.data) {
+                       
+                        const result: IResponseJson = await super.updateUserService(user);
+            
+                        if(result.status) {
+                            res.status(200);
+                            res.json({success:1});
+                        } else {
+                            res.status(400);
+                            res.json(result?.message);
+                        }
+                    } else if(idExists.status && !idExists.data) {
+                        res.status(404);
+                        res.json("User not found!");
+                        throw Error("User not found!") 
                     } else {
                         res.status(400);
-                        res.json(result?.message);
+                        res.json(idExists?.message);
                     }
-                } else if(idExists.status && !idExists.data) {
-                    res.status(404);
-                    res.json("User not found!");
-                    throw Error("User not found!") 
-                } else {
-                    res.status(400);
-                    res.json(idExists?.message);
                 }
+            } else {
+                res.status(401);
+                res.json("Not authorized!");
+                throw Error("Not authorized!");
             }
         } catch (error: any) {
             console.error(error);

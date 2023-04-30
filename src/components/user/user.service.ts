@@ -67,24 +67,6 @@ export class UserService implements IUserService {
         }
     }
 
-    public async findAllUserService(): Promise<IResponseJson> {
-        try {
-            const connected: Boolean = await connect();
-
-            if(connected) {
-                const users = await executeQuery(`SELECT id, name, email, role from users`);
-                return {status: true, data: users.data};
-            }
-
-            return {status: false, data: null};
-        } catch(error: any) {
-            console.error(error);
-            return {status: false, data: null, message: error?.toString()};
-        } finally {
-            await disconnect();
-        }
-    }
-
     public async updateUserService(userParams: IUpdateUserDTO): Promise<IResponseJson> {
         try {
             const { id, name, email } = userParams;
@@ -181,5 +163,9 @@ export class UserService implements IUserService {
         } finally {
             await disconnect();
         }
+    }
+
+    public compareParamIdAndHeaderID(headerID: number, userID: number): boolean {
+        return headerID === userID
     }
 }
