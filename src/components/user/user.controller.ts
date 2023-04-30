@@ -145,7 +145,7 @@ export class UserController extends UserService implements IUserController {
                         throw Error("Error saving token!");
                     }
 
-                    res.json({token: token, idUser: user.data.id})
+                    res.json({token: token, userID: user.data.id})
                 } else {
                     res.status(406);
                     res.send("Invalid password!");
