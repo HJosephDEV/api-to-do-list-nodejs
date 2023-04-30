@@ -7,7 +7,7 @@ dotenv.config();
 export function Auth(req: Request, res: Response, next: NextFunction): void {
     try {
         const authToken: string | undefined = req.headers['authorization'];
-        const authIdUser: string | undefined | Array<string> = req.headers['id-user'];
+        const authIdUser: string | undefined | Array<string> = req.headers['user-id'];
 
         if(authToken != undefined) {
             const bearer: Array<string> = authToken.split(' ');

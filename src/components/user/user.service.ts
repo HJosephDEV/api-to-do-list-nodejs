@@ -143,13 +143,13 @@ export class UserService implements IUserService {
         }
     }
 
-    public async saveToken(token: string, id_user: number): Promise<IResponseJson> {
+    public async saveToken(token: string, user_id: number): Promise<IResponseJson> {
         try {
             const connection: IResponseJson = await connect();
 
             if(connection.status) {
-                const deleteQueryResult: IResponseJson = await executeQuery(`DELETE FROM tokens WHERE id_user=${id_user};`);
-                const insertQueryResult: IResponseJson = await executeQuery(`INSERT INTO tokens (token, id_user) VALUES ('${token}', ${id_user});`);
+                const deleteQueryResult: IResponseJson = await executeQuery(`DELETE FROM tokens WHERE user_id=${user_id};`);
+                const insertQueryResult: IResponseJson = await executeQuery(`INSERT INTO tokens (token, user_id) VALUES ('${token}', ${user_id});`);
 
                 if(deleteQueryResult.status && insertQueryResult.status) return {status: true, data: 1};
             }
@@ -163,13 +163,13 @@ export class UserService implements IUserService {
         }
     }
 
-    public async checkToken(token: string, id_user: number): Promise<IResponseJson> {
+    public async checkToken(token: string, user_id: number): Promise<IResponseJson> {
         try {
             const connection: IResponseJson = await connect();
 
             if(connection.status) {
-                const deleteQueryResult: IResponseJson = await executeQuery(`DELETE FROM tokens WHERE id_user=${id_user};`);
-                const insertQueryResult: IResponseJson = await executeQuery(`INSERT INTO tokens (token, id_user) VALUES ('${token}', ${id_user});`);
+                const deleteQueryResult: IResponseJson = await executeQuery(`DELETE FROM tokens WHERE user_id=${user_id};`);
+                const insertQueryResult: IResponseJson = await executeQuery(`INSERT INTO tokens (token, user_id) VALUES ('${token}', ${user_id});`);
 
                 if(deleteQueryResult.status && insertQueryResult.status) return {status: true, data: 1};
             }
