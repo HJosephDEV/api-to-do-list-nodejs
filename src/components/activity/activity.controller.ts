@@ -116,10 +116,32 @@ export class ActivityController extends ActivityService implements IActivityCont
         }
     }
 
-    public async findAllActivities(req: Request, res: Response): Promise<void> {
+    public async findPerPageActivities(req: Request, res: Response): Promise<void> {
         try {
             const userID: number = Number(req.headers['user-id'])
-            const result: IResponseJson = await super.findAllActivityService(userID);
+            const page: number = Number(req.query.page || 1)
+            const resultsPerPage: number = 15
+
+            if (page <= 0) {
+              res.status(400)
+              res.json({ error: 'Invalid page!' });
+
+              return
+            }
+            
+            const totalResults: IResponseJson = await super.findQuantityActivityService(userID)
+            const totalPages = Math.ceil(totalResults.data / resultsPerPage);
+
+            if (page > totalPages) {
+              res.status(404)
+              res.json({ error: 'Page not found!"' });
+
+              return 
+            }
+
+            const offset = page > 1 ? (page - 1) * resultsPerPage : resultsPerPage;
+
+            const result: IResponseJson = await super.findPerPageActivityService(userID, resultsPerPage, offset);
 
             if(result.status) {
                 res.status(200);

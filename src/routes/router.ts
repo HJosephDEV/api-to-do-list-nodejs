@@ -13,7 +13,7 @@ router.put('/user/:id', Auth, new UserController().updateUser);
 router.delete('/user/:id', Auth, new UserController().deleteUser);
 
 router.post('/activity', Auth, new ActivityController().createActivity);
-router.get('/activity', Auth, new ActivityController().findAllActivities);
+router.get('/activities', Auth, new ActivityController().findPerPageActivities);
 router.get('/activity/:id', Auth, new ActivityController().findActivity);
 router.put('/activity/:id', Auth, new ActivityController().updateActivity);
 router.delete('/activity/:id', Auth, new ActivityController().deleteActivity);

@@ -88,12 +88,12 @@ export class ActivityService implements IActivityService {
         }
     }
     
-    public async findAllActivityService(id: number): Promise<IResponseJson> {
+    public async findPerPageActivityService(id: number, resultsPerPage: number, offset: number): Promise<IResponseJson> {
         try {
             const connected: Boolean = await connect();
             
             if(connected) {
-                const activities: IResponseJson = await executeQuery(`SELECT * FROM activities WHERE user_id=${id}`);
+                const activities: IResponseJson = await executeQuery(`SELECT * FROM activities WHERE user_id=${id} LIMIT ${resultsPerPage} OFFSET ${offset}`);
                 return {status: true, data: activities.data};
             }
             
@@ -105,6 +105,25 @@ export class ActivityService implements IActivityService {
             await disconnect();
         }
     }
+
+    public async findQuantityActivityService(id: number): Promise<IResponseJson> {
+        try {
+            const connected: Boolean = await connect();
+            
+            if(connected) {
+                const totalResults: IResponseJson = await executeQuery(`SELECT COUNT(*) as count FROM activities WHERE user_id=${id}`);
+                return {status: true, data: totalResults.data[0].count};
+            }
+            
+            return {status: false, data: null};
+        } catch(error: any) {
+            console.error(error);
+            return {status: false, data: null, message: error?.toString()};
+        } finally {
+            await disconnect();
+        }
+    }
+
 
     public async findExistingNameActivityService(activityName: string): Promise<IResponseJson> {
         try {

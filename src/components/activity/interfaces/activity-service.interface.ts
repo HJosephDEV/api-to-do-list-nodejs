@@ -7,7 +7,8 @@ export interface IActivityService {
     deleteActivityService(id: number): Promise<IResponseJson>;
     findByIdActivityService(id: number): Promise<IResponseJson>;
     updateActivityService(activityParams: IUpdateActivityDTO): Promise<IResponseJson>
-    findAllActivityService(id: number): Promise<IResponseJson>;
+    findPerPageActivityService(id: number, resultsPerPage: number, offset: number): Promise<IResponseJson>;
     findExistingNameActivityService(activityName: string): Promise<IResponseJson>;
     compareActivityIdAndUserID(activityID: number, userID: number): Promise<IResponseJson>;
+    findQuantityActivityService(id: number): Promise<IResponseJson>;
 }
