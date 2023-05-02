@@ -145,8 +145,8 @@ export class ActivityController extends ActivityService implements IActivityCont
 
             if(result.status) {
                 res.status(200);
-                res.json({status: 200, data: result.data});
-            } else {
+                res.json({status: 200, data: {activities: result.data, page: page, totalPages: totalPages}});
+            } else { 
                 res.status(400);
                 res.json(result?.message);
             }
