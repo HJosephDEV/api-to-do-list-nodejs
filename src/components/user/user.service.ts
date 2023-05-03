@@ -92,7 +92,7 @@ export class UserService implements IUserService {
             const connection: IResponseJson = await connect();
 
             if(connection.status) {
-                const queryResult: IResponseJson = await executeQuery(`SELECT id, email, password, role from users WHERE email='${email}'`);
+                const queryResult: IResponseJson = await executeQuery(`SELECT id, name, email, password, role from users WHERE email='${email}'`);
 
                 if(queryResult.status) return {status: true, data: queryResult.data?.length > 0 ? queryResult.data[0] : null};
             }

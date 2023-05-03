@@ -106,6 +106,24 @@ export class ActivityService implements IActivityService {
         }
     }
 
+    public async findAlreadyPaginatedPagesActivityService(id: number, limit: number): Promise<IResponseJson> {
+        try {
+            const connected: Boolean = await connect();
+            
+            if(connected) {
+                const activities: IResponseJson = await executeQuery(`SELECT * FROM activities WHERE user_id=${id} LIMIT ${limit}`);
+                return {status: true, data: activities.data};
+            }
+            
+            return {status: false, data: null};
+        } catch(error: any) {
+            console.error(error);
+            return {status: false, data: null, message: error?.toString()};
+        } finally {
+            await disconnect();
+        }
+    }
+
     public async findQuantityActivityService(id: number): Promise<IResponseJson> {
         try {
             const connected: Boolean = await connect();
@@ -125,12 +143,12 @@ export class ActivityService implements IActivityService {
     }
 
 
-    public async findExistingNameActivityService(activityName: string): Promise<IResponseJson> {
+    public async findExistingNameActivityService(activityName: string, userID: number): Promise<IResponseJson> {
         try {
             const connection: IResponseJson = await connect();
     
             if(connection.status) {
-                const queryResult: IResponseJson = await executeQuery(`SELECT id, name FROM activities WHERE name='${activityName}'`);
+                const queryResult: IResponseJson = await executeQuery(`SELECT id, name FROM activities WHERE name='${activityName}' and user_id=${userID}`);
     
                 if(queryResult.status) return {status: true, data: queryResult.data.length > 0 ? { activity: queryResult.data[0] }: null};
             }

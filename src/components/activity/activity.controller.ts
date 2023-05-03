@@ -18,7 +18,7 @@ export class ActivityController extends ActivityService implements IActivityCont
             const activity: IStoreActivityDTO = {...req.body, userID};
 
             if(activity) {
-                const activityExists: IResponseJson = await super.findExistingNameActivityService(activity.name);
+                const activityExists: IResponseJson = await super.findExistingNameActivityService(activity.name, userID);
                 
                 if(activityExists.status && !activityExists.data) {
                     const result: IResponseJson = await super.createActivityService(activity);
@@ -120,7 +120,24 @@ export class ActivityController extends ActivityService implements IActivityCont
         try {
             const userID: number = Number(req.headers['user-id'])
             const page: number = Number(req.query.page || 1)
+            const limit: number = Number(req.query.limit || 0)
             const resultsPerPage: number = 15
+
+            // temporário
+            if(limit > 1) {
+                const resultActivityByLimit: IResponseJson = await super.findAlreadyPaginatedPagesActivityService(userID, limit)
+                if(resultActivityByLimit.status) {
+                    res.status(200);
+                    res.json({status: 200, data: {activities: resultActivityByLimit.data}});
+
+                    return
+                } else { 
+                    res.status(400);
+                    res.json(resultActivityByLimit?.message);
+
+                    return
+                }
+            }
 
             if (page <= 0) {
               res.status(400)
