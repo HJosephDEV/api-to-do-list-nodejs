@@ -123,7 +123,6 @@ export class ActivityController extends ActivityService implements IActivityCont
             const limit: number = Number(req.query.limit || 0)
             const resultsPerPage: number = 15
 
-            // temporário
             if(limit > 1) {
                 const resultActivityByLimit: IResponseJson = await super.findAlreadyPaginatedPagesActivityService(userID, limit)
                 if(resultActivityByLimit.status) {
@@ -147,6 +146,7 @@ export class ActivityController extends ActivityService implements IActivityCont
             }
             
             const totalResults: IResponseJson = await super.findQuantityActivityService(userID)
+
             const totalPages = Math.ceil(totalResults.data / resultsPerPage);
 
             if (page > totalPages) {
@@ -156,7 +156,7 @@ export class ActivityController extends ActivityService implements IActivityCont
               return 
             }
 
-            const offset = page > 1 ? (page - 1) * resultsPerPage : resultsPerPage;
+            const offset = (page - 1) * resultsPerPage;
 
             const result: IResponseJson = await super.findPerPageActivityService(userID, resultsPerPage, offset);
 

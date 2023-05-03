@@ -91,7 +91,7 @@ export class ActivityService implements IActivityService {
     public async findPerPageActivityService(id: number, resultsPerPage: number, offset: number): Promise<IResponseJson> {
         try {
             const connected: Boolean = await connect();
-            
+
             if(connected) {
                 const activities: IResponseJson = await executeQuery(`SELECT * FROM activities WHERE user_id=${id} LIMIT ${resultsPerPage} OFFSET ${offset}`);
                 return {status: true, data: activities.data};
