@@ -43,12 +43,10 @@ export const executeQuery: Function = async(query: Query): Promise<IResponseJson
     });
 })
 
-export const disconnect: Function = async (): Promise<void> => {
+export const disconnect: Function = async (): Promise<void> =>  new Promise((resolve, reject) => {
     db.end((error) => {
-        try {
-            if(error) throw error;
-        } catch(error: any) {
-            console.error(error.message);
-        }
-    })
-}
+        if(error) reject(error);
+        resolve();
+    });
+});
+

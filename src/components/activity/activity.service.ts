@@ -11,6 +11,7 @@ export class ActivityService implements IActivityService {
             const {name, description, userID} = activityParams;
             const connection: IResponseJson = await connect();
 
+            console.log(`INSERT INTO activities (name, description, user_id, created_at, updated_at) VALUES ('${name}', '${description}', ${userID}, NOW(), NULL);`)
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`INSERT INTO activities (name, description, user_id, created_at, updated_at) VALUES ('${name}', '${description}', ${userID}, NOW(), NULL);`);
                
