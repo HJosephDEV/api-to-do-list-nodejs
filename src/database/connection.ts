@@ -31,9 +31,18 @@ export const connect: Function = (): Promise<IResponseJson> => new Promise((reso
     });
 })
 
-export const executeQuery: Function = async(query: Query): Promise<IResponseJson> => new Promise((resolve, reject) => {
+export const executeQuery: Function = async(query: Query): Promise<IResponseJson> => new Promise(async (resolve, reject) => {
     let status = false;
+    let connected;
 
+    if(!isConnected) {
+        connected = await connect()
+    }
+    
+    if(!connected?.status) reject(connected);
+    
+    isConnected = true;
+    
     db.query(query, (error, results) => {
         try {
             if (error) throw error;
@@ -49,6 +58,7 @@ export const disconnect: Function = async (): Promise<void> =>  new Promise((res
     if(isConnected) {
         db.end((error) => {
             if(error) reject(error);
+            isConnected = false;
             resolve();
         });
     } else {
