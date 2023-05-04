@@ -6,6 +6,7 @@ import { IResponseJson } from "../components/base/interfaces/response-json.inter
 dotenv.config();
 
 var db: Connection;
+var isConnected = false;
 
 export const connect: Function = (): Promise<IResponseJson> => new Promise((resolve, reject) => {
     db = mysql.createConnection({
@@ -21,6 +22,7 @@ export const connect: Function = (): Promise<IResponseJson> => new Promise((reso
         try {
             if(error) throw error;
             status = true;
+            isConnected = true;
             resolve({status: status, data: null});
         } catch(error: any) {
             reject(error);
@@ -43,7 +45,7 @@ export const executeQuery: Function = async(query: Query): Promise<IResponseJson
     });
 })
 
-export const disconnect: Function = async (): Promise<void> =>  new Promise((resolve, reject) => {
+export const disconnect: Function = async (): Promise<void> =>  new Promise((resolve, reject) => { 
     db.end((error) => {
         if(error) reject(error);
         resolve();

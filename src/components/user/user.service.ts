@@ -16,9 +16,6 @@ export class UserService implements IUserService {
             if(connection.status) {
                 const hash = await bcrypt.hash(password, 10);
                 const queryResult: IResponseJson = await executeQuery(`INSERT INTO users (name, password, email, role) VALUES ('${name}', '${hash}', '${email}', ${role});`);
-                                
-                await disconnect();
-
                
                if(queryResult.status) return {status: true, data: null, message: 'User created successfully!'};
             }
@@ -38,9 +35,6 @@ export class UserService implements IUserService {
 
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`SELECT id, name, email, role FROM users WHERE id=${id}`);
-                                
-                await disconnect();
-
 
                 if(queryResult.status) return {status: true, data: queryResult.data.length > 0 ? { user: queryResult.data[0] }: null};
             }
@@ -60,9 +54,6 @@ export class UserService implements IUserService {
 
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`DELETE FROM users WHERE id=${id}`);
-                                
-                await disconnect();
-
 
                 if(queryResult.status) return {status: true, data: null, message: 'User deleted successfully!'}
             }
@@ -105,9 +96,6 @@ export class UserService implements IUserService {
 
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`SELECT id, name, email, password, role from users WHERE email='${email}'`);
-                                
-                await disconnect();
-
 
                 if(queryResult.status) return {status: true, data: queryResult.data?.length > 0 ? queryResult.data[0] : null};
             }
@@ -127,9 +115,6 @@ export class UserService implements IUserService {
 
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`SELECT email from users WHERE email='${email}'`);
-                                
-                await disconnect();
-
 
                 if(queryResult.status) return {status: true, data: queryResult.data?.length > 0 ? queryResult.data[0] : null};
             }
@@ -150,9 +135,6 @@ export class UserService implements IUserService {
             if(connection.status) {
                 const deleteQueryResult: IResponseJson = await executeQuery(`DELETE FROM tokens WHERE user_id=${user_id};`);
                 const insertQueryResult: IResponseJson = await executeQuery(`INSERT INTO tokens (token, user_id) VALUES ('${token}', ${user_id});`);
-                                
-                await disconnect();
-
 
                 if(deleteQueryResult.status && insertQueryResult.status) return {status: true, data: 1};
             }
@@ -173,9 +155,6 @@ export class UserService implements IUserService {
             if(connection.status) {
                 const deleteQueryResult: IResponseJson = await executeQuery(`DELETE FROM tokens WHERE user_id=${user_id};`);
                 const insertQueryResult: IResponseJson = await executeQuery(`INSERT INTO tokens (token, user_id) VALUES ('${token}', ${user_id});`);
-                                
-                await disconnect();
-
 
                 if(deleteQueryResult.status && insertQueryResult.status) return {status: true, data: 1};
             }
