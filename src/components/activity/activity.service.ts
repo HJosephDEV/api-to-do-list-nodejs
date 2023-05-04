@@ -11,11 +11,9 @@ export class ActivityService implements IActivityService {
             const {name, description, userID} = activityParams;
             const connection: IResponseJson = await connect();
 
-            console.log(`INSERT INTO activities (name, description, user_id, created_at, updated_at) VALUES ('${name}', '${description}', ${userID}, NOW(), NULL);`)
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`INSERT INTO activities (name, description, user_id, created_at, updated_at) VALUES ('${name}', '${description}', ${userID}, NOW(), NULL);`);
 
-               
                if(queryResult.status) return {status: true, data: null, message: 'Activity created successfully!'};
             }
             
@@ -54,7 +52,6 @@ export class ActivityService implements IActivityService {
             
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`DELETE FROM activities WHERE id=${id}`);
-
                 
                 if(queryResult.status) return {status: true, data: null, message: 'Activity deleted successfully!'}
             }

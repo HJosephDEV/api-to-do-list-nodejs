@@ -46,9 +46,13 @@ export const executeQuery: Function = async(query: Query): Promise<IResponseJson
 })
 
 export const disconnect: Function = async (): Promise<void> =>  new Promise((resolve, reject) => { 
-    db.end((error) => {
-        if(error) reject(error);
+    if(isConnected) {
+        db.end((error) => {
+            if(error) reject(error);
+            resolve();
+        });
+    } else {
         resolve();
-    });
+    }
 });
 
