@@ -14,6 +14,9 @@ export class ActivityService implements IActivityService {
             console.log(`INSERT INTO activities (name, description, user_id, created_at, updated_at) VALUES ('${name}', '${description}', ${userID}, NOW(), NULL);`)
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`INSERT INTO activities (name, description, user_id, created_at, updated_at) VALUES ('${name}', '${description}', ${userID}, NOW(), NULL);`);
+                                
+                await disconnect();
+
                
                if(queryResult.status) return {status: true, data: null, message: 'Activity created successfully!'};
             }
@@ -33,6 +36,9 @@ export class ActivityService implements IActivityService {
 
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`SELECT * FROM activities WHERE id=${id}`);
+                                
+                await disconnect();
+
 
                 if(queryResult.status) return {status: true, data: queryResult.data.length > 0 ? { activity: queryResult.data[0] }: null};
             }
@@ -52,6 +58,9 @@ export class ActivityService implements IActivityService {
             
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`DELETE FROM activities WHERE id=${id}`);
+                                
+                await disconnect();
+
                 
                 if(queryResult.status) return {status: true, data: null, message: 'Activity deleted successfully!'}
             }
@@ -75,6 +84,9 @@ export class ActivityService implements IActivityService {
 
                 if(connected) {
                     const queryResult: IResponseJson = await executeQuery(`UPDATE activities SET name='${name}', description='${description}', updated_at=NOW() WHERE id=${id}`)
+                                    
+                    await disconnect();
+
 
                     if(queryResult.status) return {status: true, data: null, message: 'Activity updated successfully!'}
                 }
@@ -95,6 +107,9 @@ export class ActivityService implements IActivityService {
 
             if(connected) {
                 const activities: IResponseJson = await executeQuery(`SELECT * FROM activities WHERE user_id=${id} LIMIT ${resultsPerPage} OFFSET ${offset}`);
+                                
+                await disconnect();
+
                 return {status: true, data: activities.data};
             }
             
@@ -113,6 +128,9 @@ export class ActivityService implements IActivityService {
             
             if(connected) {
                 const activities: IResponseJson = await executeQuery(`SELECT * FROM activities WHERE user_id=${id} LIMIT ${limit}`);
+                                
+                await disconnect();
+
                 return {status: true, data: activities.data};
             }
             
@@ -131,6 +149,9 @@ export class ActivityService implements IActivityService {
             
             if(connected) {
                 const totalResults: IResponseJson = await executeQuery(`SELECT COUNT(*) as count FROM activities WHERE user_id=${id}`);
+                                
+                await disconnect();
+
                 return {status: true, data: totalResults.data[0].count};
             }
             
@@ -150,7 +171,9 @@ export class ActivityService implements IActivityService {
     
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`SELECT id, name FROM activities WHERE name='${activityName}' and user_id=${userID}`);
-    
+                    
+                await disconnect();
+
                 if(queryResult.status) return {status: true, data: queryResult.data.length > 0 ? { activity: queryResult.data[0] }: null};
             }
     
@@ -169,7 +192,9 @@ export class ActivityService implements IActivityService {
     
             if(connection.status) {
                 const queryResult: IResponseJson = await executeQuery(`SELECT id FROM activities WHERE id=${activityID} and user_id=${userID}`);
-    
+
+                await disconnect();
+
                 if(queryResult.status) return {status: true, data: queryResult.data.length > 0 ? true : false};
             }
     
